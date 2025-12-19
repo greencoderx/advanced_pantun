@@ -28,11 +28,12 @@ client = tweepy.Client(
     access_token_secret=os.environ["TW_ACCESS_SECRET"]
 )
 
-# --- HELPER: APPEND UNIQUE TAG ---
+# --- HELPER: APPEND INVISIBLE UNIQUE TAG ---
 def append_unique_tag(text):
-    # Adds zero-width space + timestamp to avoid duplicate tweet error
     ts = dt.utcnow().strftime("%Y%m%d%H%M%S")
-    return f"{text} \u200b{ts}"
+    # Convert each digit to zero-width char
+    zero_width = ''.join(chr(0x200B + int(c)) for c in ts)
+    return text + zero_width
 
 # --- HELPER: IS FRIDAY ---
 def is_friday():
@@ -60,7 +61,7 @@ else:
     pantun, ai_used = get_pantun_safe()
     tweet_text = append_unique_tag(pantun)
     try:
-        t1 = client.create_tweet(text=tweet_text)
+        client.create_tweet(text=tweet_text)
         print("Pantun post sent successfully.")
     except tweepy.errors.Forbidden as e:
         print("Twitter duplicate / forbidden error:", e)
