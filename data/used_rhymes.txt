@@ -1,0 +1,3 @@
+# Each line stores a rhyme pattern used previously by the bot.
+# Format: ABAB, AABB, etc.
+# The bot will append new patterns automatically.
