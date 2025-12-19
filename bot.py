@@ -22,9 +22,15 @@ def is_friday():
     return datetime.utcnow().weekday() == 4
 
 if is_friday():
-    quran = random.choice(json.load(open("data/quran.json",encoding="utf-8")))
+    try:
+        with open("data/quran.json", encoding="utf-8") as f:
+            quran = random.choice(json.load(f))
+    except FileNotFoundError:
+        quran = "📖 \"Sesungguhnya bersama kesulitan ada kemudahan.\" (QS. Al-Insyirah: 6)"
+
     client.create_tweet(text=quran)
     send_telegram(quran)
+
 else:
     pantun, _ = get_pantun_safe()
     tweet = client.create_tweet(text=pantun)
