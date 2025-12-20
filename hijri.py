@@ -1,18 +1,23 @@
-import requests
+from hijri_converter import Gregorian
 from datetime import datetime
+from zoneinfo import ZoneInfo
+import os
 
-HIJRI_THEMES = {
-    1: "hijrah dan muhasabah",
-    3: "akhlak Rasulullah",
-    7: "taubat dan keinsafan",
-    8: "istiqamah dalam ibadah",
-    9: "iman, sabar, dan amal",
-    12: "pengorbanan dan ketaatan"
-}
+TZ = ZoneInfo("Asia/Kuala_Lumpur")
 
-def get_hijri_theme():
-    today = datetime.utcnow().strftime("%d-%m-%Y")
-    url = f"https://api.aladhan.com/v1/gToH/{today}"
-    res = requests.get(url, timeout=10).json()
-    month = int(res["data"]["hijri"]["month"]["number"])
-    return HIJRI_THEMES.get(month, "nasihat kehidupan")
+def get_hijri():
+    today = datetime.now(TZ).date()
+    h = Gregorian(today.year, today.month, today.day).to_hijri()
+    return {
+        "year": h.year,
+        "month": h.month,
+        "day": h.day,
+        "month_name": h.month_name()
+    }
+
+def hijri_footer():
+    h = get_hijri()
+    return f"📅 {h['day']} {h['month_name']} {h['year']}H | 🇲🇾 Malaysia"
+
+def hijri_override():
+    return os.getenv("HIJRI_OVERRIDE", "").lower().strip()
