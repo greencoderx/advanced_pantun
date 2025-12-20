@@ -1,0 +1,16 @@
+{
+  "ramadan": {
+    "month": 9,
+    "mode": "quran_only",
+    "countdown_days": 7,
+    "emoji": "🌙"
+  },
+  "muharram": {
+    "month": 1,
+    "emoji": "🕋"
+  },
+  "dhul_hijjah": {
+    "month": 12,
+    "emoji": "🐑"
+  }
+}
